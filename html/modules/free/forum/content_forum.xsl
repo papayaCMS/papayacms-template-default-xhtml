@@ -4,13 +4,13 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns="http://www.w3.org/1999/xhtml"
   exclude-result-prefixes="#default"
->
-
-<xsl:param name="FORUM_CATEGORY_COLUMN_COUNT" select="2" />
-<xsl:param name="FORUM_OVERVIEW_COLUMN_COUNT" select="1" />
+  >
+<xsl:import href="dialog.xsl"/>
+<xsl:param name="FORUM_CATEGORY_COLUMN_COUNT" select="2"/>
+<xsl:param name="FORUM_OVERVIEW_COLUMN_COUNT" select="1"/>
 
 <xsl:param name="PAGE_LANGUAGE"></xsl:param>
-<xsl:param name="LANGUAGE_MODULE_CURRENT" select="document(concat($PAGE_LANGUAGE, '.xml'))" />
+<xsl:param name="LANGUAGE_MODULE_CURRENT" select="document(concat($PAGE_LANGUAGE, '.xml'))"/>
 <xsl:param name="LANGUAGE_MODULE_FALLBACK" select="document('en-US.xml')"/>
 
 <xsl:template name="page-styles">
@@ -21,8 +21,10 @@
 
 <xsl:template name="content-area">
   <xsl:param name="pageContent" select="content/topic"/>
+
   <xsl:choose>
     <xsl:when test="$pageContent/@module = 'content_forum'">
+      
       <xsl:call-template name="module-content-forum">
         <xsl:with-param name="pageContent" select="$pageContent"/>
       </xsl:call-template>
@@ -40,39 +42,39 @@
   </xsl:choose>
 </xsl:template>
 
-<!-- overload the multiple columns item template to add own item types with different tag structures -->
-<xsl:template name="multiple-columns-item">
-  <xsl:param name="item" />
+  <!-- overload the multiple columns item template to add own item types with different tag structures -->
+  <xsl:template name="multiple-columns-item">
+  <xsl:param name="item"/>
   <xsl:param name="itemType">item</xsl:param>
   <xsl:choose>
     <xsl:when test="$itemType = 'forumCategory'">
       <xsl:call-template name="module-content-forum-category-item">
-        <xsl:with-param name="item" select="$item" />
-        <xsl:with-param name="itemType" select="$itemType" />
+        <xsl:with-param name="item" select="$item"/>
+        <xsl:with-param name="itemType" select="$itemType"/>
       </xsl:call-template>
     </xsl:when>
     <xsl:when test="$itemType = 'forumOverview'">
       <xsl:call-template name="module-content-forum-overview-item">
-        <xsl:with-param name="item" select="$item" />
-        <xsl:with-param name="itemType" select="$itemType" />
+        <xsl:with-param name="item" select="$item"/>
+        <xsl:with-param name="itemType" select="$itemType"/>
       </xsl:call-template>
     </xsl:when>
     <xsl:otherwise>
       <xsl:call-template name="module-content-category-item">
-        <xsl:with-param name="item" select="$item" />
-        <xsl:with-param name="itemType" select="$itemType" />
+        <xsl:with-param name="item" select="$item"/>
+        <xsl:with-param name="itemType" select="$itemType"/>
       </xsl:call-template>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
 
 <xsl:template name="module-content-forum-category-item">
-  <xsl:param name="item" />
+  <xsl:param name="item"/>
   <xsl:param name="itemType">forumCategory</xsl:param>
-  <h2><a href="{$item/@href}"><xsl:value-of select="$item/@title" /></a></h2>
+  <h2><a href="{$item/@href}"><xsl:value-of select="$item/@title"/></a></h2>
   <xsl:if test="$item/*|$item/text()">
     <div class="description">
-      <xsl:apply-templates select="$item/*|$item/text()" />
+      <xsl:apply-templates select="$item/*|$item/text()"/>
     </div>
   </xsl:if>
   <div class="forumCategoryStatistics">
@@ -81,18 +83,18 @@
       <xsl:with-param name="text">FORUM_CATEGORY_COUNT</xsl:with-param>
     </xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="$item/@categories" />
+    <xsl:value-of select="$item/@categories"/>
     <xsl:text> )</xsl:text>
   </div>
 </xsl:template>
 
 <xsl:template name="module-content-forum-overview-item">
-  <xsl:param name="item" />
+  <xsl:param name="item"/>
   <xsl:param name="itemType">forumOverview</xsl:param>
-  <h2><a href="{$item/@href}"><xsl:value-of select="$item/@title" /></a></h2>
+  <h2><a href="{$item/@href}"><xsl:value-of select="$item/@title"/></a></h2>
   <xsl:if test="$item/description/node()">
     <div class="description">
-      <xsl:apply-templates select="$item/description/node()" />
+      <xsl:apply-templates select="$item/description/node()"/>
     </div>
   </xsl:if>
   <div class="forumStatistics">
@@ -101,19 +103,19 @@
       <xsl:with-param name="text">FORUM_THREAD_COUNT</xsl:with-param>
     </xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="$item/@thread_count" />
+    <xsl:value-of select="$item/@thread_count"/>
     <xsl:text>, </xsl:text>
     <xsl:call-template name="language-text">
       <xsl:with-param name="text">FORUM_ENTRY_COUNT</xsl:with-param>
     </xsl:call-template>
     <xsl:text> </xsl:text>
-    <xsl:value-of select="$item/@entry_count" />
+    <xsl:value-of select="$item/@entry_count"/>
     <xsl:text> )</xsl:text>
   </div>
   <xsl:if test="$item/entry">
     <div class="forumLatestEntry">
       <xsl:call-template name="module-content-forum-threads">
-        <xsl:with-param name="threads" select="$item/entry" />
+        <xsl:with-param name="threads" select="$item/entry"/>
         <xsl:with-param name="caption">
           <xsl:call-template name="language-text">
            <xsl:with-param name="text">FORUM_CAPTION_LAST_ENTRY</xsl:with-param>
@@ -125,7 +127,7 @@
 </xsl:template>
 
 <xsl:template name="module-content-forum">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
   <xsl:choose>
     <xsl:when test="$pageContent/forum/no-content">
       <xsl:call-template name="module-content-forum-page-nocontent">
@@ -162,6 +164,7 @@
       </xsl:call-template>
     </xsl:when>
     <xsl:otherwise>
+
       <!-- category page -->
       <xsl:call-template name="module-content-forum-page-category">
         <xsl:with-param name="pageContent" select="$pageContent"/>
@@ -171,12 +174,12 @@
 </xsl:template>
 
 <xsl:template name="module-content-forum-page-searchresults">
-  <xsl:param name="pageContent" />
-  <xsl:call-template name="module-content-topic">
-    <xsl:with-param name="pageContent" select="$pageContent" />
+  <xsl:param name="pageContent"/>
+    <xsl:call-template name="module-content-topic">
+    <xsl:with-param name="pageContent" select="$pageContent"/>
     <xsl:with-param name="withText" select="false()"></xsl:with-param>
   </xsl:call-template>
-  <xsl:call-template name="module-content-forum-messages" >
+  <xsl:call-template name="module-content-forum-messages">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <xsl:call-template name="module-content-forum-links">
@@ -186,8 +189,9 @@
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <xsl:if test="$pageContent/forum/searchresults/entry">
+
     <xsl:call-template name="module-content-forum-threads">
-      <xsl:with-param name="threads" select="$pageContent/forum/searchresults/entry" />
+      <xsl:with-param name="threads" select="$pageContent/forum/searchresults"/>
     </xsl:call-template>
   </xsl:if>
   <xsl:if test="not($pageContent/forum/searchresults/entry)">
@@ -200,12 +204,12 @@
 </xsl:template>
 
 <xsl:template name="module-content-forum-page-nocontent">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
   <xsl:call-template name="module-content-topic">
-    <xsl:with-param name="pageContent" select="$pageContent" />
+    <xsl:with-param name="pageContent" select="$pageContent"/>
     <xsl:with-param name="withText" select="false()"></xsl:with-param>
   </xsl:call-template>
-  <xsl:call-template name="module-content-forum-messages" >
+  <xsl:call-template name="module-content-forum-messages">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <xsl:call-template name="module-content-forum-links">
@@ -215,38 +219,38 @@
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <h1 class="forumTitle">
-    <xsl:value-of select="$pageContent/forum/@title" />
+    <xsl:value-of select="$pageContent/forum/@title"/>
   </h1>
-  <div><xsl:apply-templates select="$pageContent/forum/no-content/node()" /></div>
-  <xsl:call-template name="module-content-forum-newpost" >
+  <div><xsl:apply-templates select="$pageContent/forum/no-content/node()"/></div>
+  <xsl:call-template name="module-content-forum-newpost">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
 </xsl:template>
 
 <xsl:template name="module-content-forum-newpost">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
   <xsl:if test="$pageContent/forum/newdlg/dialog">
     <xsl:call-template name="dialog">
-      <xsl:with-param name="dialog" select="$pageContent/forum/newdlg/dialog" />
+      <xsl:with-param name="dialog" select="$pageContent/forum/newdlg/dialog"/>
       <xsl:with-param name="id">forumNewEntry</xsl:with-param>
     </xsl:call-template>
   </xsl:if>
 </xsl:template>
 
 <xsl:template name="module-content-forum-messages">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
   <xsl:for-each select="$pageContent/forum/message">
     <div>
       <xsl:if test="@type = 'error'">
         <xsl:attribute name="class">errorMessage</xsl:attribute>
       </xsl:if>
-      <xsl:apply-templates select="node()" />
+      <xsl:apply-templates select="node()"/>
     </div>
   </xsl:for-each>
 </xsl:template>
 
 <xsl:template name="module-content-forum-links">
-  <xsl:param name="links" />
+  <xsl:param name="links"/>
   <xsl:if test="$links/link">
     <ul class="forumNavigation">
       <xsl:for-each select="$links/link">
@@ -277,17 +281,17 @@
 </xsl:template>
 
 <xsl:template name="module-content-forum-search">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
   <xsl:if test="$pageContent/forum/searchdlg">
     <xsl:call-template name="dialog">
-      <xsl:with-param name="dialog" select="$pageContent/forum/searchdlg/dialog" />
+      <xsl:with-param name="dialog" select="$pageContent/forum/searchdlg/dialog"/>
       <xsl:with-param name="id">forumSearch</xsl:with-param>
     </xsl:call-template>
   </xsl:if>
 </xsl:template>
 
 <xsl:template name="module-content-forum-category">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
 
   <xsl:if test="$pageContent/forum/category">
     <div class="forumCategoryTitle">
@@ -298,24 +302,32 @@
         <xsl:text>: </xsl:text>
       </span>
       <span class="title">
-        <xsl:value-of select="$pageContent/forum/category/@title" />
+        <xsl:value-of select="$pageContent/forum/category/@title"/>
       </span>
     </div>
     <div class="forumCategoryDescription">
-      <xsl:apply-templates select="$pageContent/forum/category/node()" />
+      <xsl:apply-templates select="$pageContent/forum/category/node()"/>
     </div>
   </xsl:if>
 </xsl:template>
 
 <xsl:template name="module-content-forum-page-category">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
   <xsl:call-template name="module-content-topic">
-    <xsl:with-param name="pageContent" select="$pageContent" />
-  </xsl:call-template>
-  <xsl:call-template name="module-content-forum-messages" >
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
-  <xsl:call-template name="module-content-forum-links">
+  <xsl:call-template name="module-content-forum-messages">
+    <xsl:with-param name="pageContent" select="$pageContent"/>
+  </xsl:call-template>
+
+  <xsl:choose>
+    <xsl:when test="$pageContent/forum/newdlg">
+    <xsl:call-template name="module-content-forum-newpost">
+      <xsl:with-param name="pageContent" select="$pageContent"/>
+    </xsl:call-template>
+    </xsl:when>
+    <xsl:otherwise>
+        <xsl:call-template name="module-content-forum-links">
     <xsl:with-param name="links" select="$pageContent/forum/links"/>
   </xsl:call-template>
   <xsl:call-template name="module-content-forum-category">
@@ -324,37 +336,42 @@
   <xsl:call-template name="module-content-forum-search">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
-  <xsl:if test="$pageContent/forum">
-    <xsl:if test="count($pageContent/forum/categories/category) &gt; 0">
-      <xsl:call-template name="multiple-columns">
-        <xsl:with-param name="items" select="$pageContent/forum/categories/category"/>
-        <xsl:with-param name="itemType">forumCategory</xsl:with-param>
-        <xsl:with-param name="columnCount" select="$FORUM_CATEGORY_COLUMN_COUNT" />
-      </xsl:call-template>
-    </xsl:if>
-    <xsl:if test="count($pageContent/forum/forums/forum) &gt; 0">
-      <xsl:call-template name="multiple-columns">
-        <xsl:with-param name="items" select="$pageContent/forum/forums/forum"/>
-        <xsl:with-param name="itemType">forumOverview</xsl:with-param>
-        <xsl:with-param name="columnCount" select="$FORUM_OVERVIEW_COLUMN_COUNT" />
-      </xsl:call-template>
-    </xsl:if>
-    <xsl:if test="count($pageContent/forum/forums/forum) + count($pageContent/forum/categories/category) &lt;= 0">
-      <div class="messageError">
-        <xsl:call-template name="language-text">
-          <xsl:with-param name="text">FORUM_NO_ENTRIES</xsl:with-param>
-        </xsl:call-template>
-      </div>
-    </xsl:if>
-  </xsl:if>
+
+      <xsl:if test="$pageContent/forum">
+        <xsl:if test="count($pageContent/forum/categories/category) &gt; 0">
+          <xsl:call-template name="multiple-columns">
+            <xsl:with-param name="items" select="$pageContent/forum/categories/category"/>
+            <xsl:with-param name="itemType">forumCategory</xsl:with-param>
+            <xsl:with-param name="columnCount" select="$FORUM_CATEGORY_COLUMN_COUNT"/>
+          </xsl:call-template>
+        </xsl:if>
+        <xsl:if test="count($pageContent/forum/forums/forum) &gt; 0">
+          <xsl:call-template name="multiple-columns">
+            <xsl:with-param name="items" select="$pageContent/forum/forums/forum"/>
+            <xsl:with-param name="itemType">forumOverview</xsl:with-param>
+            <xsl:with-param name="columnCount" select="$FORUM_OVERVIEW_COLUMN_COUNT"/>
+          </xsl:call-template>
+        </xsl:if>
+        <xsl:if test="count($pageContent/forum/forums/forum) + count($pageContent/forum/categories/category) &lt;= 0">
+          <div class="messageError">
+            <xsl:call-template name="language-text">
+              <xsl:with-param name="text">FORUM_NO_ENTRIES</xsl:with-param>
+            </xsl:call-template>
+          </div>
+        </xsl:if>
+      </xsl:if>
+
+    </xsl:otherwise>
+  </xsl:choose>
+
 </xsl:template>
 
 <xsl:template name="module-content-forum-page-threads">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
   <xsl:call-template name="module-content-topic">
-    <xsl:with-param name="pageContent" select="$pageContent" />
+    <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
-  <xsl:call-template name="module-content-forum-messages" >
+  <xsl:call-template name="module-content-forum-messages">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <xsl:call-template name="module-content-forum-links">
@@ -364,26 +381,27 @@
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <h1 class="forumTitle">
-    <xsl:value-of select="$pageContent/forum/@title" />
+    <xsl:value-of select="$pageContent/forum/@title"/>
   </h1>
   <xsl:call-template name="module-content-forum-threads">
-    <xsl:with-param name="threads" select="$pageContent/forum/topics" />
+    <xsl:with-param name="threads" select="$pageContent/forum/topics"/>
   </xsl:call-template>
   <xsl:call-template name="module-content-forum-threads">
-    <xsl:with-param name="threads" select="$pageContent/forum/thread/entries" />
+    <xsl:with-param name="threads" select="$pageContent/forum/thread/entries"/>
   </xsl:call-template>
-  <xsl:call-template name="module-content-forum-newpost" >
+
+  <xsl:call-template name="module-content-forum-newpost">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
 </xsl:template>
 
 <xsl:template name="module-content-forum-page-entry-threaded">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
   <xsl:call-template name="module-content-topic">
-    <xsl:with-param name="pageContent" select="$pageContent" />
+    <xsl:with-param name="pageContent" select="$pageContent"/>
     <xsl:with-param name="withText" select="false()"></xsl:with-param>
   </xsl:call-template>
-  <xsl:call-template name="module-content-forum-messages" >
+  <xsl:call-template name="module-content-forum-messages">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <xsl:call-template name="module-content-forum-links">
@@ -395,41 +413,41 @@
   <xsl:if test="$pageContent/forum/entry/node()">
     <div class="forumEntry">
       <h1 class="forumTitle">
-        <xsl:apply-templates select="$pageContent/forum/entry/subject/node()" />
+        <xsl:apply-templates select="$pageContent/forum/entry/subject/node()"/>
       </h1>
       <xsl:call-template name="forumAuthorInfo">
         <xsl:with-param name="user" select="$pageContent/forum/entry/user"/>
-        <xsl:with-param name="simpleAuthorInfo" select="false()" />
+        <xsl:with-param name="simpleAuthorInfo" select="false()"/>
       </xsl:call-template>
 
       <div class="forumEntryContent">
-        <xsl:apply-templates select="$pageContent/forum/entry/text/node()" />
+        <xsl:apply-templates select="$pageContent/forum/entry/text/node()"/>
       </div>
       <div class="forumEntryLinks">
         <xsl:call-template name="module-content-forum-links">
           <xsl:with-param name="links" select="$pageContent/forum/entry/links"/>
         </xsl:call-template>
       </div>
-      <xsl:call-template name="float-fix" />
+      <xsl:call-template name="float-fix"/>
     </div>
   </xsl:if>
   <xsl:if test="count($pageContent/forum/thread/entries//entry) &gt; 1">
     <xsl:call-template name="module-content-forum-threads">
-      <xsl:with-param name="threads" select="$pageContent/forum/thread/entries/entry" />
+      <xsl:with-param name="threads" select="$pageContent/forum/thread/entries/entry"/>
     </xsl:call-template>
   </xsl:if>
-  <xsl:call-template name="module-content-forum-newpost" >
+  <xsl:call-template name="module-content-forum-newpost">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
 </xsl:template>
 
 <xsl:template name="module-content-forum-page-entry-bbs">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
   <xsl:call-template name="module-content-topic">
-    <xsl:with-param name="pageContent" select="$pageContent" />
+    <xsl:with-param name="pageContent" select="$pageContent"/>
     <xsl:with-param name="withText" select="false()"></xsl:with-param>
   </xsl:call-template>
-  <xsl:call-template name="module-content-forum-messages" >
+  <xsl:call-template name="module-content-forum-messages">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <xsl:call-template name="module-content-forum-links">
@@ -439,27 +457,27 @@
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <h1 class="forumTitle">
-    <xsl:value-of select="$pageContent/forum/thread/@title" />
+    <xsl:value-of select="$pageContent/forum/thread/@title"/>
   </h1>
-  <xsl:call-template name="module-content-forum-messages" >
+  <xsl:call-template name="module-content-forum-messages">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <xsl:call-template name="module-content-forum-bbs">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
-  <xsl:call-template name="module-content-forum-newpost" >
+  <xsl:call-template name="module-content-forum-newpost">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
 </xsl:template>
 
 <xsl:template name="module-content-forum-page-entry-treaded-bbs">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
 
   <xsl:call-template name="module-content-topic">
-    <xsl:with-param name="pageContent" select="$pageContent" />
+    <xsl:with-param name="pageContent" select="$pageContent"/>
     <xsl:with-param name="withText" select="false()"></xsl:with-param>
   </xsl:call-template>
-  <xsl:call-template name="module-content-forum-messages" >
+  <xsl:call-template name="module-content-forum-messages">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <xsl:call-template name="module-content-forum-links">
@@ -469,21 +487,21 @@
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <h1 class="forumTitle">
-    <xsl:value-of select="$pageContent/forum/thread/@title" />
+    <xsl:value-of select="$pageContent/forum/thread/@title"/>
   </h1>
-  <xsl:call-template name="module-content-forum-messages" >
+  <xsl:call-template name="module-content-forum-messages">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <xsl:call-template name="module-content-forum-treaded-bbs">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
-  <xsl:call-template name="module-content-forum-newpost" >
+  <xsl:call-template name="module-content-forum-newpost">
     <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
 </xsl:template>
 
 <xsl:template name="module-content-forum-treaded-bbs">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
   <xsl:for-each select="$pageContent/forum/thread/entries/entry">
     <div style="padding-left: {@indent * 30 + 10}px;">
       <xsl:attribute name="class">
@@ -493,24 +511,24 @@
         </xsl:choose>
       </xsl:attribute>
       <xsl:if test="position() &gt; 1">
-        <h2><xsl:value-of select="subject" /></h2>
+        <h2><xsl:value-of select="subject"/></h2>
       </xsl:if>
       <xsl:call-template name="forumAuthorInfo">
-        <xsl:with-param name="user" select="user" />
-        <xsl:with-param name="simpleAuthorInfo" select="false()" />
+        <xsl:with-param name="user" select="user"/>
+        <xsl:with-param name="simpleAuthorInfo" select="false()"/>
       </xsl:call-template>
       <div>
-        <xsl:apply-templates select="text/node()" />
+        <xsl:apply-templates select="text/node()"/>
       </div>
       <div class="bbsInfoOptionsContainer">
         <div class="bbsEntryDateContainer">
           <xsl:call-template name="getEntryCreateModifyUpdateDateInfo">
-            <xsl:with-param name="item" select="." />
+            <xsl:with-param name="item" select="."/>
           </xsl:call-template>
         </div>
         <div class="bbsOneEntryLinksContainer">
           <xsl:call-template name="module-content-forum-links">
-            <xsl:with-param name="links" select="links" />
+            <xsl:with-param name="links" select="links"/>
           </xsl:call-template>
         </div>
       </div>
@@ -525,7 +543,7 @@
 </xsl:template>
 
 <xsl:template name="module-content-forum-bbs">
-  <xsl:param name="pageContent" />
+  <xsl:param name="pageContent"/>
   <xsl:for-each select="$pageContent/forum/thread/entries/entry">
     <div>
       <xsl:attribute name="class">
@@ -535,24 +553,24 @@
         </xsl:choose>
       </xsl:attribute>
       <xsl:if test="position() &gt; 1">
-        <h2><xsl:value-of select="subject" /></h2>
+        <h2><xsl:value-of select="subject"/></h2>
       </xsl:if>
       <xsl:call-template name="forumAuthorInfo">
-        <xsl:with-param name="user" select="user" />
-        <xsl:with-param name="simpleAuthorInfo" select="false()" />
+        <xsl:with-param name="user" select="user"/>
+        <xsl:with-param name="simpleAuthorInfo" select="false()"/>
       </xsl:call-template>
       <div>
-        <xsl:apply-templates select="text/node()" />
+        <xsl:apply-templates select="text/node()"/>
       </div>
       <div class="bbsInfoOptionsContainer">
         <div class="bbsEntryDateContainer">
           <xsl:call-template name="getEntryCreateModifyUpdateDateInfo">
-            <xsl:with-param name="item" select="." />
+            <xsl:with-param name="item" select="."/>
           </xsl:call-template>
         </div>
         <div class="bbsOneEntryLinksContainer">
           <xsl:call-template name="module-content-forum-links">
-            <xsl:with-param name="links" select="links" />
+            <xsl:with-param name="links" select="links"/>
           </xsl:call-template>
         </div>
       </div>
@@ -567,13 +585,13 @@
 </xsl:template>
 
 <xsl:template name="module-content-forum-threads">
-  <xsl:param name="threads" />
-  <xsl:param name="caption" select="''" />
-  
-  <xsl:if test="$threads/entry and count($threads/entry) &gt; 0">
+  <xsl:param name="threads"/>
+  <xsl:param name="caption" select="''"/>
+  <xsl:if test="$threads and count($threads) &gt; 0">
+
     <table class="forumThreads">
       <xsl:if test="$caption != ''">
-        <caption><xsl:value-of select="$caption" /></caption>
+        <caption><xsl:value-of select="$caption"/></caption>
       </xsl:if>
       <thead>
         <tr>
@@ -582,6 +600,7 @@
               <xsl:with-param name="text">FORUM_CAPTION_TITLE</xsl:with-param>
             </xsl:call-template>
           </th>
+
           <xsl:if test="$threads/entry/text">
             <th class="text">
               <xsl:call-template name="language-text">
@@ -603,7 +622,7 @@
             <th class="date">
               <xsl:text> </xsl:text>
             </th>
-            <xsl:if test="$threads/entry/links/link">
+            <xsl:if test="$threads/links/link">
               <th class="links">
                 <xsl:text> </xsl:text>
               </th>
@@ -624,22 +643,22 @@
                 </xsl:attribute>
                 <td class="title" style="padding-left: {@indent * 20}px;">
                   <a href="{@href}">
-                    <xsl:apply-templates select="subject" />
+                    <xsl:apply-templates select="subject"/>
                   </a>
                 </td>
                 <xsl:if test="$threads/entry/text">
-                  <td class="text"><xsl:apply-templates select="text" /></td>
+                  <td class="text"><xsl:apply-templates select="text"/></td>
                 </xsl:if>
                 <td class="author">
                   <xsl:call-template name="forumAuthorInfo">
-                    <xsl:with-param name="user" select="user" />
-                    <xsl:with-param name="simpleAuthorInfo" select="true()" />
+                    <xsl:with-param name="user" select="user"/>
+                    <xsl:with-param name="simpleAuthorInfo" select="true()"/>
                   </xsl:call-template>
                 </td>
-                <td class="answerCount"><xsl:value-of select="@answers" /></td>
+                <td class="answerCount"><xsl:value-of select="@answers"/></td>
                 <td class="date">
                   <xsl:call-template name="getEntryCreateModifyUpdateDateInfo">
-                    <xsl:with-param name="item" select="." />
+                    <xsl:with-param name="item" select="."/>
                   </xsl:call-template>
                 </td>
                 <xsl:if test="$threads/entry/links/link">
@@ -663,11 +682,11 @@
                 </xsl:attribute>
                 <td class="title" style="padding-left: {@indent * 20}px;">
                   <a href="{@href}">
-                    <xsl:apply-templates select="subject" />
+                    <xsl:apply-templates select="subject"/>
                   </a>
                 </td>
                 <xsl:if test="$threads/entry/text">
-                  <td class="text"><xsl:apply-templates select="text" /></td>
+                  <td class="text"><xsl:apply-templates select="text"/></td>
                 </xsl:if>
                 </tr>
             </xsl:for-each>
@@ -684,7 +703,7 @@
 </xsl:template>
 
 <xsl:template name="getEntryCreateModifyUpdateDateInfo">
-  <xsl:param name="item" />
+  <xsl:param name="item"/>
 
   <div>
     <xsl:call-template name="language-text">
@@ -692,7 +711,7 @@
     </xsl:call-template>
     <xsl:text>: </xsl:text>
     <xsl:call-template name="format-date-time">
-      <xsl:with-param name="dateTime" select="$item/@modified" />
+      <xsl:with-param name="dateTime" select="$item/@modified"/>
     </xsl:call-template>
   </div>
   <div>
@@ -701,7 +720,7 @@
     </xsl:call-template>
     <xsl:text>: </xsl:text>
     <xsl:call-template name="format-date-time">
-      <xsl:with-param name="dateTime" select="$item/@created" />
+      <xsl:with-param name="dateTime" select="$item/@created"/>
     </xsl:call-template>
   </div>
   <div>
@@ -717,7 +736,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="format-date-time">
-          <xsl:with-param name="dateTime" select="$item/@thread_modified" />
+          <xsl:with-param name="dateTime" select="$item/@thread_modified"/>
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
@@ -725,30 +744,30 @@
 </xsl:template>
 
 <xsl:template name="module-content-forum-thread-indent">
-  <xsl:param name="indent" />
+  <xsl:param name="indent"/>
   <xsl:if test="$indent &gt; 0">
     <div class="indent">
       <xsl:text> </xsl:text>
     </div>
     <xsl:call-template name="module-content-forum-thread-indent">
-      <xsl:with-param name="indent" select="$indent - 1" />
+      <xsl:with-param name="indent" select="$indent - 1"/>
     </xsl:call-template>
   </xsl:if>
 </xsl:template>
 
 <xsl:template name="forumAuthorInfo">
-  <xsl:param name="user" />
+  <xsl:param name="user"/>
   <xsl:param name="simpleAuthorInfo" select="true()"/>
 
   <xsl:choose>
     <xsl:when test="$simpleAuthorInfo">
-      <xsl:apply-templates select="$user/username/node()" />
+      <xsl:apply-templates select="$user/username/node()"/>
     </xsl:when>
     <xsl:otherwise>
       <div class="forumAuthorInfo">
         <xsl:if test="$user/avatar/img">
-          <xsl:apply-templates select="$user/avatar/img" />
-          <br />
+          <xsl:apply-templates select="$user/avatar/img"/>
+          <br/>
         </xsl:if>
 
         <strong>
@@ -759,7 +778,7 @@
             <xsl:text>: </xsl:text>
           </span>
           <span class="forumAuthorInfoValue">
-            <xsl:apply-templates select="$user/username/node()" />
+            <xsl:apply-templates select="$user/username/node()"/>
           </span>
         </strong>
         <xsl:if test="$user/@registered != 'true'">
@@ -779,11 +798,11 @@
             <xsl:text>: </xsl:text>
           </span>
           <span class="forumAuthorInfoValue">
-            <xsl:value-of select="$user/registration" />
+            <xsl:value-of select="$user/registration"/>
           </span>
           <br/>
         </xsl:if>
-        <xsl:if test="$user/lastlogin" >
+        <xsl:if test="$user/lastlogin">
           <span class="forumAuthorInfoCaption">
             <xsl:call-template name="language-text">
               <xsl:with-param name="text">FORUM_CAPTION_LAST_LOGIN</xsl:with-param>
@@ -791,7 +810,7 @@
             <xsl:text>: </xsl:text>
           </span>
           <span class="forumAuthorInfoValue">
-            <xsl:value-of select="$user/lastlogin" />
+            <xsl:value-of select="$user/lastlogin"/>
           </span>
           <br/>
         </xsl:if>
@@ -803,7 +822,7 @@
             <xsl:text>: </xsl:text>
           </span>
           <span class="forumAuthorInfoValue">
-            <xsl:value-of select="$user/group" />
+            <xsl:value-of select="$user/group"/>
           </span>
           <br/>
         </xsl:if>
@@ -815,7 +834,7 @@
             <xsl:text>: </xsl:text>
           </span>
           <span class="forumAuthorInfoValue">
-            <xsl:value-of select="$user/entries" />
+            <xsl:value-of select="$user/entries"/>
           </span>
         </xsl:if>
       </div>
@@ -823,26 +842,26 @@
   </xsl:choose>
 </xsl:template>
 
-<!-- list entries template -->
-<xsl:template name="module-content-forum-last-entries">
+  <!-- list entries template -->
+  <xsl:template name="module-content-forum-last-entries">
   <xsl:param name="pageContent"/>
   <xsl:call-template name="module-content-topic">
-    <xsl:with-param name="pageContent" select="$pageContent" />
+    <xsl:with-param name="pageContent" select="$pageContent"/>
   </xsl:call-template>
   <div class="forumEntries">
     <xsl:for-each select="$pageContent/forum/lastentries/entries/entry">
       <h2>
-        <xsl:value-of select="forum" />
+        <xsl:value-of select="forum"/>
         <xsl:text>,</xsl:text>
-        <xsl:value-of select="category" />
+        <xsl:value-of select="category"/>
       </h2>
       <p>
-        <a href="{@href}"><xsl:value-of select="subject" /></a><br />
+        <a href="{@href}"><xsl:value-of select="subject"/></a><br/>
         <xsl:text>(</xsl:text>
-          <xsl:value-of select="user/username" />
+          <xsl:value-of select="user/username"/>
           <xsl:text> - </xsl:text>
           <xsl:call-template name="format-date-time">
-            <xsl:with-param name="dateTime" select="@modified" />
+            <xsl:with-param name="dateTime" select="@modified"/>
           </xsl:call-template>
         <xsl:text>)</xsl:text>
       </p>
@@ -856,5 +875,8 @@
     </xsl:if>
   </div>
 </xsl:template>
+
+  <xsl:template match="*" mode="serialize"> <xsl:text>&lt;</xsl:text><xsl:value-of select="name(.)"/> <xsl:text>&gt;</xsl:text> <xsl:apply-templates
+    mode="serialize"/> <xsl:text>&lt;/</xsl:text><xsl:value-of select="name(.)"/> <xsl:text>&gt;</xsl:text> </xsl:template>
 
 </xsl:stylesheet>
