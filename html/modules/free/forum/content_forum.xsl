@@ -115,7 +115,7 @@
   <xsl:if test="$item/entry">
     <div class="forumLatestEntry">
       <xsl:call-template name="module-content-forum-threads">
-        <xsl:with-param name="threads" select="$item/entry"/>
+        <xsl:with-param name="threads" select="$item"/>
         <xsl:with-param name="caption">
           <xsl:call-template name="language-text">
            <xsl:with-param name="text">FORUM_CAPTION_LAST_ENTRY</xsl:with-param>
@@ -875,8 +875,5 @@
     </xsl:if>
   </div>
 </xsl:template>
-
-  <xsl:template match="*" mode="serialize"> <xsl:text>&lt;</xsl:text><xsl:value-of select="name(.)"/> <xsl:text>&gt;</xsl:text> <xsl:apply-templates
-    mode="serialize"/> <xsl:text>&lt;/</xsl:text><xsl:value-of select="name(.)"/> <xsl:text>&gt;</xsl:text> </xsl:template>
 
 </xsl:stylesheet>
