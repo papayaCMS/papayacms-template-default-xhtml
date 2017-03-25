@@ -283,7 +283,7 @@
   <xsl:param name="field" />
   <xsl:param name="showMandatory" select="true()" />
   <div class="field">
-    <xsl:if test="$field/@error='yes'|$field/@error=''">
+    <xsl:if test="$field/@error='yes' or $field/@error=''">
       <xsl:attribute name="class">field error</xsl:attribute>
     </xsl:if>
     <xsl:choose>
