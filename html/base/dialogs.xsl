@@ -89,6 +89,14 @@
           </xsl:call-template>
         </xsl:for-each>
       </xsl:when>
+      <xsl:when test="$dialog/field"> 
+	      <xsl:for-each select="$dialog/field">
+	        <xsl:call-template name="dialog-field">
+	          <xsl:with-param name="dialog" select="$dialog" />
+	          <xsl:with-param name="field" select="." />
+	        </xsl:call-template>
+	      </xsl:for-each>
+      </xsl:when>
       <xsl:otherwise>
         <xsl:for-each select="$dialog/*">
           <xsl:call-template name="dialog-direct-element">
@@ -275,6 +283,9 @@
   <xsl:param name="field" />
   <xsl:param name="showMandatory" select="true()" />
   <div class="field">
+    <xsl:if test="$field/@error='yes'|$field/@error=''">
+      <xsl:attribute name="class">field error</xsl:attribute>
+    </xsl:if>
     <xsl:choose>
       <xsl:when test="$field/input[@type = 'file']">
         <xsl:call-template name="dialog-field-file">
